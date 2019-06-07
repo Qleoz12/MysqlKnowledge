@@ -1,0 +1,9 @@
+
+/*update a table  with the sum of other table 07-06-2019 tested */
+UPDATE tabletarget c
+INNER JOIN (
+ SELECT columnkey,
+ 		SUM(colTosum) as sum 
+ FROM tableToSum GROUP BY columKey
+) x ON c.columKeyTarget = x.columnkey
+SET c.sumTarget = x.sum where c.columKeyTarget=//especific id or remove this of all
