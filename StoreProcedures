@@ -1,1 +1,50 @@
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `new_procedure`(in idEntidadlogueada bigint(20),in idEntidadSeleccionada bigint(20),out res varchar(50))
+sp:BEGIN
+  DECLARE bDone INT;
+  DECLARE id_padre_row bigint(20);
+  
+    -- reset 
+    SET @prmiera = false;
+    SET @myArrayOfValue= null;
+    SET @xpath= null;
+   
+    SET @prmiera = false;
+    SET @myArrayOfValue="";
+	SET @myArrayOfValue=CONCAT(@myArrayOfValue,idEntidadlogueada,",");
+    SET @xpath = @myArrayOfValue;
+	WHILE LENGTH(@xpath) > 0 
+    DO
+		select concat("camino a",@xpath);
+		-- agrega path 
+		set @myArrayOfValue=CONCAT(@myArrayOfValue,@xpath);
+		 -- eliminar
+         if @prmiera then
+			SET @value = ELT(1,@xpath);
+			SET @xpath= SUBSTRING(@xpath, LOCATE(',',@xpath) + 1);
+         end if;
+         set @prmiera= true;
+        -- head
+        SET @value = SUBSTRING_INDEX(@xpath,",",1);
+		SET idEntidadlogueada = CAST(@value as SIGNED INTEGER) ;
+        inners:BEGIN
+			DECLARE curs CURSOR FOR  SELECT id_entidad_padre FROM jerarquia_entidad WHERE id_entidad_hijo=idEntidadlogueada;
+			DECLARE CONTINUE HANDLER FOR NOT FOUND SET bDone = 1;
+             -- save reapets on cursor
+			SET bDone = 0;
+            OPEN curs;
+			REPEAT
+				FETCH curs INTO id_padre_row;
+					if bDone=0 then
+						SET @xpath =CONCAT(@xpath,id_padre_row,",");
+					end if;
+                select concat("test row ",id_padre_row);
+                select concat("agrega",@xpath);
+				UNTIL bDone END REPEAT;
+			CLOSE curs;
+		End;
+    END WHILE;
+
+    
+  set res=@myArrayOfValue;
+END
