@@ -1,0 +1,46 @@
+select pepzc.* from perfil_entidad_parqueadero_y_zona_celda pepzc
+inner join parqueaderos_y_zonas pyz on pepzc.id_parqueadero=pyz.id_parqueadero
+inner join opcion o on pepzc.id_opcion=o.id_opcion
+where 
+pepzc.id_entidad_seleccionada=2137
+and pepzc.id_entidad_logueada in (69)
+and pepzc.id_celda is null
+and o.estado="AC"
+and pepzc.estado="AC"
+and pyz.activo=true
+group by id_parqueadero;
+
+
+
+-- revisado para comentar con el LF
+select pepzc.* from perfil_entidad_parqueadero_y_zona_celda pepzc
+inner join parqueaderos_y_zonas pyz on pepzc.id_parqueadero=pyz.id_parqueadero
+inner join opcion o on pepzc.id_opcion=o.id_opcion
+where 
+pepzc.id_entidad_seleccionada in (69)
+and pepzc.id_celda is null
+and pepzc.estado="AC"
+and pyz.activo=true
+and pyz.id_parqueadero not in 
+(select pepzc.id_parqueadero from perfil_entidad_parqueadero_y_zona_celda pepzc
+inner join parqueaderos_y_zonas pyz on pepzc.id_parqueadero=pyz.id_parqueadero
+inner join opcion o on pepzc.id_opcion=o.id_opcion
+where 
+pepzc.id_entidad_seleccionada=2137
+and pepzc.id_entidad_logueada in (69)
+and pepzc.id_celda is null
+and o.estado="AC"
+and pepzc.estado="AC"
+and pyz.activo=true
+group by id_parqueadero)
+and pepzc.id_parqueadero in (select pepzc.id_parqueadero from perfil_entidad_parqueadero_y_zona_celda pepzc
+inner join parqueaderos_y_zonas pyz on pepzc.id_parqueadero=pyz.id_parqueadero
+inner join opcion o on pepzc.id_opcion=o.id_opcion
+where 
+pepzc.id_entidad_seleccionada in (45)
+and pepzc.id_celda is null
+and o.estado="AC"
+and pepzc.estado="AC"
+and pyz.activo=true
+group by id_parqueadero)
+group by id_parqueadero;
