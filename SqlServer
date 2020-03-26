@@ -1,0 +1,12 @@
+
+-- clean and validate substring data
+SET @tipoclienteActual=RTRIM (LTRIM(@tipoclienteActual))
+SET @tiposCliente=RTRIM (LTRIM(@tiposCliente))
+IF (CHARINDEX(UPPER(@tipoclienteActual),UPPER(@tiposCliente))> 0)
+BEGIN
+	PRINT 'Validacion tiposClienteEximidos'
+	SET @valorScoring=0;
+		SET @estadoInsertProcesado=0;
+        SET @aprovado=0;
+		RETURN;
+END
