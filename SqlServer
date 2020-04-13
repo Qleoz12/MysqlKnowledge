@@ -1,3 +1,5 @@
+--retend identity 
+DBCC CHECKIDENT ('XXX', RESEED, 1)
 
 -- clean and validate substring data
 SET @tipoclienteActual=RTRIM (LTRIM(@tipoclienteActual))
