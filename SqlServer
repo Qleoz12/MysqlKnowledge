@@ -12,3 +12,18 @@ BEGIN
         SET @aprovado=0;
 		RETURN;
 END
+
+--firmas para base de datos
+-- ==================================================================================================
+-- Nombre de la empresa                 : XXX
+-- Nombre de la aplicacion              : AdmincreditoXXX
+-- Nombre del procedimiento almacenado  : SCO_GUARDARSOLICITUD
+-- Requerimiento                        : 97453    			 
+-- Desarrollador                        : Leonardo L. Sanchez
+-- Producto              			    : ID DE SOLICITUD
+-- Base de datos 				        : Admincredito
+-- Tablas afectadas			            : SOLICITUDES_SCORING
+-- Create date                          : 2020-02-01
+-- Description                          : metodo para validar y guardar los datos de la solictud 
+                                          de calculo de scoreFNA
+-- ==================================================================================================
