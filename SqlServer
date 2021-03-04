@@ -27,3 +27,192 @@ END
 -- Description                          : metodo para validar y guardar los datos de la solictud 
                                           de calculo de scoreFNA
 -- ==================================================================================================
+
+---samtel
+A.Base de Datos Relacional
+una base de datos relacional es un tipo de base de datos, donde se alamacena y se modela la información en "tablas", que son conjunto de registros con una llave primaria (comunmente llamada id), que permite el facil indexado e identificación de cada registro; los registros son  un conjunto  de datos relacionados por columnas de la tabla que describen la inforamción del registro: 
+e.g 
+mysql> SHOW COLUMNS FROM City;
++-------------+----------+------+-----+---------+----------------+
+| Field       | Type     | Null | Key | Default | Extra          |
++-------------+----------+------+-----+---------+----------------+
+| ID          | int(11)  | NO   | PRI | NULL    | auto_increment |
+| Name        | char(35) | NO   |     |         |                |
+| CountryCode | char(3)  | NO   | MUL |         |                |
+| District    | char(20) | NO   |     |         |                |
+| Population  | int(11)  | NO   |     | 0       |                |
++-------------+----------+------+-----+---------+----------------+
+
+donde cada campo tiene caracteristicas especificas del dato a almacenar.
+
+b. Normalización de Base de Datos.
+la normalización son una serie de reglas que benefician a la base de datos para no caer en errores como redundancia, simplificar dependencia entre columnas, se mejora el diseño de la base de datos y mejora las relaciones entre las tablas.
+
+C. tabla 
+una tabla es una forma de almacenar los datos que se parece a una hoja de calculo, a una regilla donde se puede distinguir las columnas y los registros; donde cada columna es un atributo para cada registro que se almacena en la tabla. 
+
+D. Índice de una Tabla.
+
+es una de los atributos de la tabla que permite al motor de la base mejorar la velocidad de las operaciones de recuperación de datos de la tabla,los indices se pueden crear a partir de uno o mas columnas y crean una copia de las columnas utilizadas para el indice lo que hace que se requiera espacio de almaceniamiento. 
+
+e. Llave Foránea.
+la llave foranea es la presencia de una llave primaria en otra tbla , esto con el fin de reducir la redundancia y lograr tener las asociaciones entre las tablas del modelo relacional.
+
+f. SQL.
+es un lenguaje estandar para el manejo,creación,soporte y operaciones sobre las bases de datos relacionales, consiste en una serie de palabras claves y anotaciones que permiten la interación con  la base de datos; para cada tipo de base de datos se puede incluir ciertos manejos propios de la base de datos en cuestion, pero en general se mantiene ciertas caracteristicas en el lenguaje SQL en cada base de datos, se podria dar como ejemplo la diferencia y similitudes a la hora de manejar bds sql server y mysql.
+
+G. Archivo Secuencial.
+los archivos secuenciales es el producto del almacenamiento de los registos de una tabla apartir de sus clave primaria
+
+H. Archivo Indexado.
+los archivos indexados son archivos adicionales creados por el uso de indices en la tabla, estos archivos contienen la información de la posición que ocupa cada registro en la tala y facilita las busquedas,donde se consulta en el archivo indexado y con la referencia en la tabla se logra encontrar la información solicitaa en la tabla.
+
+i. Código Fuente.
+es todo el codigo nesesario , del cual sale cada uno de los componentes de un proyecto; el codigo fuente comunmente llamadao source es el que nos permite generar nuestro proyecto en la tecnología que se este utilizando, para el caso de sql server consideraria que el codigo fuente, es el conjunto de scripts que conforman la base de datos (scripts de base de datos)
+
+j. Compilador.
+ es una herramienta encargada de traducir un lenguaje de programación a un codigo entendido por las maquinas suele ser binarios, en algunos casos genera archivos.exe, para el caso de java se compila el codigo fuente en bytecode, esto es previo al envió para el despliegue o ejecución del software.
+
+
+2. Mediante un algoritmo y haciendo uso de vectores, dadas las cadenas de caracteres:
+"JUAN ES CARPINTERO" y "MARÍA ES INGENIERA", determinar:
+a. Indicar cuántas palabras tiene cada cadena.
+b. Si poseen el mismo número de letras (no tener en cuenta los espacios en blanco).
+
+
+USE [TEST]
+GO
+/****** Object:  StoredProcedure [dbo].[contrarPalabrasyLetras]    Script Date: 4/03/2021 2:28:01 p. m. ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Leonardo L sanchez
+-- Create date: 201-03-04
+-- Description:	contar palabras, contar letras 
+-- compatubilidad SQL SERVER 2016 or +
+-- =============================================
+CREATE PROCEDURE [dbo].[contrarPalabrasyLetras](
+	@oracion1 varchar(128),
+	@oracion2 varchar(128))
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+BEGIN TRY
+
+
+
+	DECLARE @dataOraciones  AS TABLE
+	(
+		ID		 INT NOT NULL PRIMARY KEY IDENTITY(1,1),	
+		oracion  VARCHAR(128) NOT NULL,
+		palabras INT NULL,
+		letras   INT NOT NULL
+	);
+	declare  @soniguales varchar(64);
+	declare  @palabras1  int;
+	declare  @palabras2 int;
+	
+	
+	select @soniguales=CASE WHEN lEN(REPLACE(@oracion1, ' ', ''))= lEN(REPLACE(@oracion2, ' ', '')) THEN ' iguales' ELSE 'no iguales' END;
+	
+	select @palabras1=count(value) from STRING_SPLIT(@oracion1,' ') where len(value)>0
+	select @palabras2=count(value) from STRING_SPLIT(@oracion2,' ') where len(value)>0
+	
+	insert into @dataOraciones 
+	SELECT @oracion1, (select count(value) from STRING_SPLIT(@oracion1,' ') where len(value)>0),lEN(REPLACE(@oracion1, ' ', ''));
+	
+	insert into @dataOraciones 
+	SELECT @oracion2, (select count(value) from STRING_SPLIT(@oracion2,' ') where len(value)>0),lEN(REPLACE(@oracion2, ' ', ''));
+
+	print 'cada cadena tiene respectivamente '+CONVERT(varchar(6),@palabras1)+' palabras - '+CONVERT(varchar(6),@palabras2)+' palabras'
+	print 'las dos oraciones en caracteres son'+@soniguales
+END TRY  
+BEGIN CATCH  
+    -- Execute error handler.  
+    
+	SELECT  
+    ERROR_NUMBER() AS ErrorNumber  
+    ,ERROR_SEVERITY() AS ErrorSeverity  
+    ,ERROR_STATE() AS ErrorState  
+    ,ERROR_PROCEDURE() AS ErrorProcedure  
+    ,ERROR_LINE() AS ErrorLine  
+    ,ERROR_MESSAGE() AS ErrorMessage;
+	
+END CATCH;
+END
+
+
+
+3. Dadas las siguientes tablas:
+- Clientes con las Columnas: num_cliente, identificación, nombre, dirección, teléfono.
+- Contratos con las Columnas: num_cliente, tipo_cuenta, num_cuenta, saldo.
+Escriba la sentencia SQL que muestre el nombre y dirección de los clientes que tienen contratos asociados.
+
+select Clientes.nombre, Clientes.dirección from Clientes
+inner join Contratos on Clientes.num_cliente =Contratos.num_cliente
+
+4. Dadas las siguientes sentencias SQL, describa la información que se desea obtener:
+
+a. SELECT VENDEDOR,AVG(IMPORTE)
+FROM PEDIDOS
+GROUP BY VENDEDOR
+HAVING SUM (IMPORTE) > 30000
+
+RTA: trae  vendedor y promedios de importe de cada vendedor donde la suma del impote sea mayor a  30000
+
+
+b. 
+SELECT CIUDAD, SUM(T1.CUOTA), SUM(T2.VENTAS)
+FROM OFICINAS AS T1, REPVENTAS AS T2
+WHERE T1.OFICINA = T2.OFICINA
+GROUP BY CIUDAD
+HAVING COUNT (*) >= 2
+
+RTA: trae  la ciudad,suma de cuotas y suma de ventas de oficinas con reporte de ventas (REPVENTAS) donde haya mas de una oficina en la ciudad.
+
+
+5. Se tienen las siguientes tablas de una base de datos relacional, donde solo las llaves primarias son obligatorias
+(la notación # indica la llave de la tabla)
+
+Cursos
+#Código Nombre
+2020 Algebra lineal
+2121 Economía
+2222 Física
+2323 Programación
+2424 Contabilidad
+Estudiantes
+#Código Nombre Carrera Promedio
+1212 Juan Pérez Sistemas 4.00
+1313 María González Sistemas 4.12
+1414 Rafael Lopera Física 4.50
+1515 Luisa Gómez Matemáticas 3.09
+1616 Roberto Ramírez Administración NULL
+Escriba la sentencia SQL que muestre los nombres de los estudiantes que no se inscribieron en Algebra Lineal.
+
+select e.nombre 
+from estudiantes e
+where e.codigo not in (select ins.codigo_estudiante from Inscripciones ins where codigo_curso!=2020);
+
+
+
+6. El BBVA requiere Actualizar el archivo de CDT´S (BBVACDTS), cuya estructura es:
+ACDT-NUMERO-CDT
+ACDT-VALO R
+ACDT-FECHA-APERTURA
+ACDT-FECHA-VENCIMIENTO
+ACDT-TASA
+ACDT-PUNTOS
+La Actualización consiste en incrementar los puntos del CDT, de acuerdo al valor de éste, de la siguiente
+manera:
+Entre 20 millones y 50 millones se debe sumarle 1.0 a los puntos
+Entre 51 millones y 90 millones se debe sumarle 1.5 a los puntos
+Entre 100 millones y 550 millones se debe sumarle 2.0 a los puntos
+Nota: Aproximadamente existen más de un millón de CDT´S.
+Realizar el Seudocódigo que realice esta actualización.
+
+
