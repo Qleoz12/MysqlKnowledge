@@ -216,3 +216,33 @@ Nota: Aproximadamente existen más de un millón de CDT´S.
 Realizar el Seudocódigo que realice esta actualización.
 
 
+
+
+
+
+
+
+
+
+
+
+-- fast and easy way to create a backup
+
+use master;
+BACKUP DATABASE [AFILIACIONES] TO DISK = 'D:\AFILIACIONES.BAK' WITH INIT;
+GO
+
+
+RESTORE DATABASE [AFILIACIONES2]
+  FROM DISK = 'D:\AFILIACIONES.BAK'
+  WITH REPLACE,
+  MOVE 'AFILIACIONES' TO 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\AFILIACIONES2.mdf',
+  MOVE 'AFILIACIONES_log' TO 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\AFILIACIONES2_log.ldf';
+
+
+
+
+
+
+
+
